@@ -1,16 +1,21 @@
-node {
-  try {
+pipeline {
+  agent { label 'docker' }
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
+  stages {
     stage('Checkout') {
-      checkout scm
+      steps {
+        checkout scm
+      }
     }
     stage('Environment') {
       steps {
-
+        sh 'git --version'
+        echo "Branch: ${env.BRANCH_NAME}"
+        sh 'docker -v'
+        sh 'printenv'
       }
-      sh 'git --version'
-      echo "Branch: ${env.BRANCH_NAME}"
-      sh 'docker -v'
-      sh 'printenv'
     }
     stage('Build') {
       steps {
@@ -22,7 +27,5 @@ node {
         }
       }
     }
-  } catch (e) {
-      throw e
   }
 }
