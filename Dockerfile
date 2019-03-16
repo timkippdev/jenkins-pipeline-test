@@ -1,8 +1,3 @@
-# install composer dependencies
-FROM composer as composer
-COPY ./composer.* /app/
-RUN composer install --no-interaction --prefer-source --no-scripts --no-dev
-
 # install PHP / Apache
 FROM php:7.1-apache
 
@@ -17,6 +12,3 @@ RUN apt-get update && \
 
 # copy all files to root directory
 COPY . .
-
-# copy vendor dependencies to root directory
-COPY --from=composer /app/vendor /var/www/vendor
